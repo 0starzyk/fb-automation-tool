@@ -6,23 +6,18 @@ from getpass import getpass
 import time
 
 
-def setup_webdriver(driver_path: str, url: str, options: list):
+def setup_webdriver(driver_path: str, options: list, url: str) -> WebDriver:
     service = Service(executable_path=driver_path)
     chrome_options = webdriver.ChromeOptions()
     for option in options:
         chrome_options.add_argument(option)
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
+    return driver
 
 
 if __name__ == "__main__":
-    service = Service(executable_path="chromedriver.exe")
-
-    options = webdriver.ChromeOptions()
-    options.add_argument("--disable-notifications")
-
-    driver = webdriver.Chrome(service=service, options=options)
-    driver.get("https://www.facebook.com/")
+    setup_webdriver("chromedriver.exe", ["--disable-notifications"], "https://www.facebook.com/")
 
     cookies_button = driver.find_element(By.XPATH, "/html/body/div[3]/div[2]/div/div/div/div/div[3]/button[1]")
     cookies_button.click()
