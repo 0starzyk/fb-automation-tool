@@ -5,6 +5,16 @@ from selenium.webdriver.common.by import By
 from getpass import getpass
 import time
 
+
+def setup_webdriver(driver_path: str, url: str, options: list):
+    service = Service(executable_path=driver_path)
+    chrome_options = webdriver.ChromeOptions()
+    for option in options:
+        chrome_options.add_argument(option)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    driver.get(url)
+
+
 if __name__ == "__main__":
     service = Service(executable_path="chromedriver.exe")
 
@@ -12,7 +22,6 @@ if __name__ == "__main__":
     options.add_argument("--disable-notifications")
 
     driver = webdriver.Chrome(service=service, options=options)
-    options = webdriver.ChromeOptions()
     driver.get("https://www.facebook.com/")
 
     cookies_button = driver.find_element(By.XPATH, "/html/body/div[3]/div[2]/div/div/div/div/div[3]/button[1]")
