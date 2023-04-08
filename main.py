@@ -7,7 +7,7 @@ from getpass import getpass
 import time
 
 
-def setup_webdriver(driver_path: str, options: list, url: str):
+def setup_webdriver(driver_path: str, options: list[str], url: str):
     service = Service(executable_path=driver_path)
     chrome_options = webdriver.ChromeOptions()
     for option in options:
@@ -20,16 +20,23 @@ def setup_webdriver(driver_path: str, options: list, url: str):
 def login(driver, email: str, password: str):
     cookies_button = driver.find_element(By.XPATH, "/html/body/div[3]/div[2]/div/div/div/div/div[3]/button[1]")
     cookies_button.click()
-
     email_input = driver.find_element(By.ID, "email")
     email_input.send_keys(email)
-
     password_input = driver.find_element(By.ID, "pass")
     password_input.send_keys(password)
-
     submit_button = driver.find_element(
         By.XPATH, "/html/body/div[1]/div[1]/div[1]/div/div/div/div[2]/div/div[1]/form/div[2]/button")
     submit_button.click()
+
+
+def click_on_element(driver, element_xpath: str):
+    WebDriverWait(driver, timeout=100).until(EC.element_to_be_clickable((By.XPATH, element_xpath)))
+    driver.find_element(By.XPATH, element_xpath).click()
+
+
+def send_keys_to_element(driver, element_xpath: str, content: str):
+    WebDriverWait(driver, timeout=100).until(EC.element_to_be_clickable((By.XPATH, element_xpath)))
+    driver.find_element(By.XPATH, element_xpath).send_keys()
 
 
 if __name__ == "__main__":
@@ -39,41 +46,18 @@ if __name__ == "__main__":
     driver = setup_webdriver("chromedriver.exe", ["--disable-notifications"], "https://www.facebook.com/")
     login(driver, email, password)
 
-    WebDriverWait(driver, timeout=100).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/"
-                                                                                "div[5]/div/div[1]/div[2]/span/div")))
-    message_button = driver.find_element(
-        By.XPATH, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/div[2]/span/div")
-    message_button.click()
+    click_on_element(driver, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/div[2]/span/div")
 
-    WebDriverWait(driver, timeout=100).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/div[1]/div/div/div/div/div/div[2]/div/div[1]/div/div[2]/div[1]/div/div[1]/input")))
-    user_search = driver.find_element(
-        By.XPATH, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/div[1]/div/div/div/div/div/div[2]/div/div[1]/div/"
-                  "div[2]/div[1]/div/div[1]/input"
-    )
-    user_search.send_keys("Bugs Bunny")
+    send_keys_to_element(driver, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/div[1]/div/div/div/div/div/div[2]/"
+                                 "div/div[1]/div/div[2]/div[1]/div/div[1]/input", "Karol Starzyk")
 
-    WebDriverWait(driver, timeout=100).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[5]/div/"
-                                         "div[1]/div[1]/div/div/div/div/div/div[2]/div/"
-                                         "div[1]/div/div[2]/div[2]/div/div[1]/ul/li[1]/ul/li[1]/div/a/div/div[1]")))
-    user = driver.find_element(By.XPATH, "/html/body/div[1]/div/div[1]/div/div[5]/div/"
-                                         "div[1]/div[1]/div/div/div/div/div/div[2]/div/"
-                                         "div[1]/div/div[2]/div[2]/div/div[1]/ul/li[1]/ul/li[1]/div/a/div/div[1]")
-    user.click()
+    click_on_element(driver, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/div[1]/div/div/div/div/div/div[2]/div/"
+                             "div[1]/div/div[2]/div[2]/div/div[1]/ul/li[1]/ul/li[1]/div/a/div/div[1]")
 
-    WebDriverWait(driver, timeout=100).until(
-        EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/"
-                                               "div[1]/div/div/div/div/div/div[2]/div/div[2]/div[2]/"
-                                               "div/div/div/div[4]/div[2]/div/div/div[1]")))
-    text_input = driver.find_element(By.XPATH, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/"
-                                               "div[1]/div/div/div/div/div/div[2]/div/div[2]/div[2]/"
-                                               "div/div/div/div[4]/div[2]/div/div/div[1]")
-    text_input.send_keys("What's up doc?")
+    send_keys_to_element(driver, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/div[1]/div/div/div/div/div/div[2]/"
+                                 "div/div[2]/div[2]/div/div/div/div[4]/div[2]/div/div/div[1]", ".")
 
-    WebDriverWait(driver, timeout=100).until(
-        EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/div[1]/"
-                                                "div/div/div/div/div/div[2]/div/div[2]/div[2]/div/div/span[2]/div")))
-    send_button = driver.find_element(By.XPATH, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/div[1]/"
-                                                "div/div/div/div/div/div[2]/div/div[2]/div[2]/div/div/span[2]/div")
-    send_button.click()
+    click_on_element(driver, "/html/body/div[1]/div/div[1]/div/div[5]/div/div[1]/div[1]/div/div/div/div/div/div[2]/div/"
+                             "div[2]/div[2]/div/div/span[2]/div")
 
     driver.quit()
