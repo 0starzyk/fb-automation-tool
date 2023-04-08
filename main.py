@@ -36,7 +36,7 @@ def click_on_element(driver, element_xpath: str):
 
 def send_keys_to_element(driver, element_xpath: str, content: str):
     WebDriverWait(driver, timeout=100).until(EC.element_to_be_clickable((By.XPATH, element_xpath)))
-    driver.find_element(By.XPATH, element_xpath).send_keys()
+    driver.find_element(By.XPATH, element_xpath).send_keys(content)
 
 
 if __name__ == "__main__":
